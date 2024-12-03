@@ -54,14 +54,14 @@ jobs:
       - name: Run tests
         run: npm test
 
-  # build:
-  #   name: Build Docker Image
-  #   needs: [lint, test]
-  #   runs-on: ubuntu-latest
+  build:
+    name: Build Docker Image
+    needs: [lint, test]
+    runs-on: ubuntu-latest
     
-  #   steps:
-  #     - uses: actions/checkout@v4
+    steps:
+      - uses: actions/checkout@v4
       
-  #     - name: Build Docker image
-  #       working-directory: ./starter/frontend
-  #       run: docker build --build-arg REACT_APP_MOVIE_API_URL=http://localhost:5000 --tag frontend:latest .
+      - name: Build Docker image
+        working-directory: ./starter/frontend
+        run: docker build --build-arg REACT_APP_MOVIE_API_URL=http://localhost:5000 --tag frontend:latest .
