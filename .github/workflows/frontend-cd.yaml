@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'starter/frontend/**'
+      - 'frontend/**'
   workflow_dispatch:
 
 env:
@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./starter/frontend
+        working-directory: frontend
     
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +28,7 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          cache-dependency-path: './starter/frontend/package-lock.json'
+          cache-dependency-path: 'frontend/package-lock.json'
       
       - name: Install dependencies
         run: npm ci
@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./starter/frontend
+        working-directory: frontend
     
     steps:
       - uses: actions/checkout@v4
@@ -50,7 +50,7 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          cache-dependency-path: './starter/frontend/package-lock.json'
+          cache-dependency-path: 'frontend/package-lock.json'
       
       - name: Install dependencies
         run: npm ci
@@ -84,7 +84,7 @@ jobs:
         run: |
           docker build \
             --build-arg REACT_APP_MOVIE_API_URL=http://localhost:5000 \
-            -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./starter/frontend
+            -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG frontend
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
   deploy:
@@ -110,6 +110,6 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          cd starter/frontend/k8s
+          cd frontend/k8s
           kustomize edit set image frontend=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           kustomize build | kubectl apply -f -

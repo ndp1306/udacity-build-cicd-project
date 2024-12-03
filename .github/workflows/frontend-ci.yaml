@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [ main ]
     paths:
-      - 'starter/frontend/**'
+      - 'frontend/**'
   workflow_dispatch:
 
 jobs:
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./starter/frontend
+        working-directory: frontend
     
     steps:
       - uses: actions/checkout@v4
@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          cache-dependency-path: './starter/frontend/package-lock.json'
+          cache-dependency-path: 'frontend/package-lock.json'
       
       - name: Install dependencies
         run: npm ci
@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./starter/frontend
+        working-directory: frontend
     
     steps:
       - uses: actions/checkout@v4
@@ -46,7 +46,7 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          cache-dependency-path: './starter/frontend/package-lock.json'
+          cache-dependency-path: 'frontend/package-lock.json'
       
       - name: Install dependencies
         run: npm ci
@@ -63,5 +63,5 @@ jobs:
       - uses: actions/checkout@v4
       
       - name: Build Docker image
-        working-directory: ./starter/frontend
+        working-directory: frontend
         run: docker build -t frontend:${{ github.sha }} .
