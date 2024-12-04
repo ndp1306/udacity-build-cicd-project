@@ -73,6 +73,15 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
       
+      - name: Update kube config
+        run: aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER }} --region ${{ env.AWS_REGION }}
+    
+      - name: Get Backend URL
+        id: backend-url
+        run: |
+          BACKEND_URL=$(kubectl get svc backend- -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          echo "BACKEND_URL=http://${BACKEND_URL}" >> $GITHUB_ENV
+
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
@@ -83,7 +92,7 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build \
-            --build-arg REACT_APP_MOVIE_API_URL=http://localhost:5000 \
+            --build-arg REACT_APP_MOVIE_API_URL=${{ env.BACKEND_URL }} \
             -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./starter/frontend
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
