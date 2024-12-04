@@ -79,7 +79,7 @@ jobs:
       - name: Get Backend URL
         id: backend-url
         run: |
-          BACKEND_URL=$(kubectl get svc backend- -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          BACKEND_URL=$(kubectl get svc backend -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
           echo "BACKEND_URL=http://${BACKEND_URL}" >> $GITHUB_ENV
 
       - name: Login to Amazon ECR
